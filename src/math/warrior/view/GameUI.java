@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import math.warrior.model.GameMap;
 import math.warrior.model.GamePlayer;
 
 /**Class: GameUI.java
@@ -66,7 +65,7 @@ public class GameUI extends Application
 
 	//Permanent Commands - TO DO: Must replace with commands from DBMS
 	private String[] textCommands = {"Save Game", "Exit Game", "Move up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats"};
-	private GameMap map;
+	//private GameMap map;
 	private GamePlayer player;
 	
 	/**Method: createLeftPane
@@ -130,7 +129,8 @@ public class GameUI extends Application
 		this.textCommandViewArea = new VBox(this.VBOX_SPACING);
 		this.textCommandViewArea.setPadding(this.WIDGET_PADDING);
 		this.commandEntry = new TextField("");
-		this.listener = new TextHandlerListener(this.commandResultBox, this.commandEntry, this.map, this.player);
+		this.listener = new TextHandlerListener(this.commandResultBox, this.commandEntry, //this.map, 
+				this.player);
 		this.commandEntry.setOnAction(listener);
 		this.textDisplayLabel = new Label("Enter Command:");
 		this.textDisplayLabel.setFont(this.TEXT_FONT_STYLE_TITLE);

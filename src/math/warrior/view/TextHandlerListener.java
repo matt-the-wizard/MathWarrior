@@ -6,15 +6,11 @@
  */
 package math.warrior.view;
 
-import com.sun.glass.ui.Application;
-
-import math.warrior.model.GameMap;
-import math.warrior.model.GamePlayer;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import math.warrior.model.GamePlayer;
 
 /**Types
  * @author Matt
@@ -23,17 +19,18 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 {
 	private TextArea textArea;
 	private TextField data;
-	private GameMap gameMap;
+	//private GameMap gameMap;
 	private GamePlayer gamePlayer;
 
 	/**Constructor
 	 * 
 	 */
-	public TextHandlerListener(TextArea area, TextField userEntry, GameMap map, GamePlayer player)
+	public TextHandlerListener(TextArea area, TextField userEntry, //GameMap map
+			 GamePlayer player)
 	{
 		this.textArea = area;
 		this.data = userEntry;
-		this.gameMap = map;
+		//this.gameMap = map;
 		this.gamePlayer = player;
 	}
 	
