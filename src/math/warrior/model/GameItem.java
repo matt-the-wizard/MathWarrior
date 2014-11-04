@@ -10,6 +10,7 @@ package math.warrior.model;
  */
 public class GameItem
 {
+
 	//Attributes
 	private String name;
 	private int value;
@@ -144,16 +145,16 @@ public class GameItem
 	@Override
 	public String toString()
 	{
-		return "GameItem\nName:\t" + name + "\nValue:\t" + value + "\nDescription:\t"
-				+ description + "\nType:\t" + type + "";
+		return "\nName:\t" + name + "\nValue:\t" + value + "\nDescription:\t"
+				+ description + "\nType:\t" + type + ".\n";
 	}
 	
-	/** Wanted to test all String constructor
+	/**
 	public static void main(String[] args)
 	{
 		GameItem item = new GameItem("Fire Sword", "5", "The sword of fire weilded by the archmage of ferelden. Uses immense fire damage.", "Sally");
 		System.out.println(item);
-	}*/
+	}**/
 	
 	
 }

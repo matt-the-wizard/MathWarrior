@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import math.warrior.model.Database;
 import math.warrior.model.GamePlayer;
 
 /**Class: GameUI.java
@@ -67,6 +68,7 @@ public class GameUI extends Application
 	private String[] textCommands = {"Save Game", "Exit Game", "Move up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats"};
 	//private GameMap map;
 	private GamePlayer player;
+	private Database database;
 	
 	/**Method: createLeftPane
 	 * This sets up the left side of the border pane with UI components. 
@@ -154,6 +156,12 @@ public class GameUI extends Application
 		this.scrollPane = new ScrollPane(this.commandResultBox);
 		this.scrollPane.setStyle(this.FX_BLACK_BGCOLOR);
 		this.borderPane.setBottom(this.scrollPane);
+	}
+	
+	private void processGameData()
+	{
+		this.database = new Database();
+		
 	}
 
 	/**Method: start

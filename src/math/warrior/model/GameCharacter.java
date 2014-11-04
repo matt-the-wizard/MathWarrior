@@ -122,8 +122,8 @@ public abstract class GameCharacter
 	@Override
 	public String toString()
 	{
-		return "GameCharacter\nName:\t" + name + "\nHealth Points:\t" + healthPoints
-				+ "\nSstrength\t" + strength + "";
+		return "\nName:\t" + name + "\nHealth Points:\t" + healthPoints
+				+ "\nStrength:\t" + strength + "";
 	}
 	
 }

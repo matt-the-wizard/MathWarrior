@@ -1,5 +1,5 @@
 package math.warrior.model;
-//brock test
+
 /**Enum: ItemType
  * @author: Matthew Berger
 * @version 1.0
