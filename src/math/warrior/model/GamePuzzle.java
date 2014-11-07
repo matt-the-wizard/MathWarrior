@@ -112,7 +112,10 @@ public class GamePuzzle
 			this.solvedMessage = solvedMessage;
 		}
 		
-
+		/**Method: toString()
+		 * The toString method for this class
+		 * @return gets the toString
+		 */
 		@Override
 		public String toString()
 		{
