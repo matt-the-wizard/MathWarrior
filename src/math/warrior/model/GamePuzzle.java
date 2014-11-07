@@ -1,5 +1,5 @@
 import java.util.Set;
-/**Class: GameItem.java
+/**Class: GamePuzzle.java
  * @author: Brock Bearchell
 * @version 1.0
  * Date Written/Updated: Nov 6, 2014
