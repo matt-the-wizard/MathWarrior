@@ -13,7 +13,6 @@ public class GamePuzzle
 	//Attributes
 		private String description;
 		private String terminator;
-		private boolean isSolved;
 		private String hint;
 		private String solvedMessage;
 		
@@ -26,11 +25,11 @@ public class GamePuzzle
 		 * @param solvedMessage message displayed once puzzle is solved
 		 */
 		public GamePuzzle(String description, String terminator,
-				String isSolved, String hint, String solvedMessage)
+				 String hint, String solvedMessage)
 		{
 			this.setDescription(description.trim());
 			this.setTerminator(terminator.trim());
-			this.setSolved(isSolved.trim());
+			
 			this.setHint(hint.trim());
 			this.setSolvedMessage(solvedMessage.trim());
 		}
@@ -75,36 +74,7 @@ public class GamePuzzle
 		 * Getter method for this instances's isSolved
 		 * @return the true or false
 		 */
-		public boolean isSolved()
-		{
-			return isSolved;
-		}
-
-		/**Method: setSolved
-		 * Setter method for this instances's isSolved
-		 * @return sets the isSolved
-		 */
-		public void setSolved(boolean isSolved)
-		{
-			this.isSolved = isSolved;
-		}
 		
-		/**Method: setSolved
-		 * Setter method for this instances's isSolved
-		 * @return sets the isSolved
-		 */
-		public void setSolved(String isSolved)
-		{
-			try
-			{
-				this.isSolved = Boolean.parseBoolean(isSolved);
-			}
-			catch(Exception e)
-			{
-				this.isSolved = false;
-				System.out.println("The puzzle defaulted to false for being solved.");
-			}
-		}
 
 		/**Method: getHint
 		 * Getter method for this instances's hint
@@ -147,7 +117,7 @@ public class GamePuzzle
 		public String toString()
 		{
 			return "Description:\t" + description + "\nTerminator:\t"
-					+ terminator + "\nSolved:\t" + isSolved + "\nHint:\t" + hint
+					+ terminator +  "\nHint:\t" + hint
 					+ "\nSolved Message:\t" + solvedMessage + "";
 		}
 		
