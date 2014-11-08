@@ -1,44 +1,49 @@
 package math.warrior.model;
 /**Class: Monster.java
  * @author: Quan Tran
-* @version 1.0
+ * @version 1.0
  * Date Written/Updated: Nov 07, 2014
  * this is the basic information for a monster.
  */
 
-public class Monster extends GameCharacter {
+public class GameMonster extends GameCharacter 
+{
+	//Attributes
 	private String desciption, attackDesciption;
 
-	/**
+	/**Constructor
 	 * @param name:  name of the monster
 	 * @param description:  description of the monster
 	 * @param healthPoints :  HP of the monster
 	 * @param strength:  strength of the monster
 	 * @param attackDesciption: attack of the monster
 	 */
-	public Monster(String name, String description, String healthPoints, String strength, String attackDesciption) {
+	public GameMonster(String name, String description, String healthPoints, String strength, String attackDesciption)
+	{
 		super(name, healthPoints, strength);
 		this.desciption=description;
 		this.attackDesciption=attackDesciption;
 	}
-	
-	
+
+
 	/**Method: getDesciption
 	 * Getter method for this instances's desciption
 	 * @return the desciption
 	 */
-	public String getDesciption() {
+	public String getDesciption()
+	{
 		return desciption;
 	}
-	
+
 	/**Method: setDesciption
 	 * Setter method for this instances's desciption
 	 * @param desciption the desciption to set
 	 */
-	public void setDesciption(String desciption) {
+	public void setDesciption(String desciption) 
+	{
 		this.desciption = desciption;
 	}
-	
+
 
 	/**Method: getAttackDesciption
 	 * Getter method for this instances's attackDesciption
@@ -48,26 +53,27 @@ public class Monster extends GameCharacter {
 	{
 		return attackDesciption;
 	}
-	
+
 	/**Method: setAttackDesciption
 	 * Setter method for this instances's attackDesciption
 	 * @param attackDesciption the attackDesciption to set
 	 */
 
-	public void setAttackDesciption(String attackDesciption) {
+	public void setAttackDesciption(String attackDesciption) 
+	{
 		this.attackDesciption = attackDesciption;
 	}
-	
+
 	/**Method: toString
 	 * @see java.lang.Object#toString()
+	 * Prints out Monster object.
 	 */
-
 	@Override
-	public String toString() {
-		return "Monster [desciption=" + desciption + ", attackDesciption="
-				+ attackDesciption + ", name=" + name + ", healthPoints="
-				+ healthPoints + ", strength=" + strength + "]";
+	public String toString()
+	{
+		return super.toString() + "\nDescription:\t" + desciption + "\nAttack Description:\t"
+				+ attackDesciption;
 	} 
-	
+
 
 }
