@@ -3,7 +3,8 @@ package math.warrior.model;
  * @author: Quan Tran
  * @version 1.0
  * Date Written/Updated: Nov 07, 2014
- * this is the basic information for a monster.
+ * This is the basic information for a monster. Maps all attributes stored in database to the monster
+ * entity and shares attributes from game character. 
  */
 
 public class GameMonster extends GameCharacter 

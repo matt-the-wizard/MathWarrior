@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**Class: GameMap.java
- * @author: Brock Bearchell
+ * @author: Brock Bearchell / Matt / Quan
  * @version 1.0
  * Date Written/Updated: Nov 6, 2014
- * Class Description:Game Map that as of right now is Super bare bones.
+ * Class Description: Game Map that will hold a two dimensional array of game rooms.
+ * Defaulted to 50 rooms to be stored in the map. Also stores the x and y position of the 
+ * player in regards to the location on the map. 
  */
 
 public class GameMap

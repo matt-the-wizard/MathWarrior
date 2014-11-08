@@ -18,7 +18,6 @@ import java.sql.Statement;
  * the database for the creation mode. Where this class is implemented and operations
  * are called is where the handling of returned data will occur. 
  */
-//TO DO: Populate Database to test game source code
 public class Database
 {
 	//Attributes
@@ -79,10 +78,10 @@ public class Database
 		}
 	}
 	
-	/**Method: 
-	 * 
-	 * @param sql
-	 * @return
+	/**Method: updateDatabase
+	 * This method allows updates to be sent to the database using update table. 
+	 * @param sql The sql statement to be sent.
+	 * @return true or false depicting if the update was a success.
 	 */
 	public boolean updateDatabase(String sql)
 	{

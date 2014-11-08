@@ -136,26 +136,14 @@ public class GamePlayer extends GameCharacter
 			this.maxHealth += item.getValue();
 			return this.name + " maximum health limit has increased to " + this.maxHealth;
 		}
-		else //Type is Item, so add health points back but do not exceed max health limit allowed.
-		{
-			this.healthPoints += item.getValue();
-			if (this.healthPoints > this.maxHealth)
-			{
-				this.healthPoints = this.maxHealth;
-				return "Health points restored. Max health limit exceeded, restoring health to maximum limit of " + this.healthPoints;
-			}
-			else
-			{
-				return "Health points restored. Number of health points left is " + this.healthPoints;
-			}
-		}
+		return "The item is not armor or weapon and must be used, not equipped.";
 	}
 
-	/**Method: equipItem
-	 * This method will add the passed in GameItem if there is an empty slot found in inventory. 
-	 * When the item is added, based on the item type, it will be equipped and change the stats of the player.
+	/**Method: addItem
+	 * This method will add the item to inventory. Then the item will be equipped to the player and change the values of 
+	 * the player based on the type of item. The item must be ARMOR or WEAPON to be equipped. 
 	 * @param item The item to be equipped to the character. 
-	 * @return Display message detailing if the game item was added successcully. 
+	 * @return Display message detailing if the game item was added successfully. 
 	 */
 	public String addItem(GameItem item)
 	{
@@ -173,13 +161,13 @@ public class GamePlayer extends GameCharacter
 		}
 		if (notAdded)
 		{
-			System.out.println("Game Item " + item + " was added to inventory at slot " + index);
-			return "Game Item " + item + " was added to inventory at slot " + index + "\n" + equippedMessage;
+			//System.out.println("Game Item " + item + " was NOT added to inventory at slot " + index);
+			return "Game Item " + item + " was NOT added to inventory. Maximum capacity is filled in inventory.\n";
 		}
 		else
 		{
-			System.out.println("Game Item " + item + " was NOT added to inventory because inventory is full.");
-			return "Game Item " + item + " was NOT added to inventory because inventory is full."+ "\n" + equippedMessage;
+			//System.out.println("Game Item " + item + " was added to inventory because inventory is full.");
+			return "Game Item " + item + " was added to inventory."+ "\n" + equippedMessage;
 		}
 	}
 
@@ -194,7 +182,6 @@ public class GamePlayer extends GameCharacter
 	{
 		boolean notDropped = true;
 		int index = 0;
-		String equippedMessage = "";
 		for (index = 0; index < this.inventory.length && notDropped; index++)
 		{
 			if (this.inventory[index].getName().equals(item.getName()))
@@ -213,6 +200,42 @@ public class GamePlayer extends GameCharacter
 		}
 	}
 
+	/**Method: useItem
+	 * This method will use a game item on the player if it is type ITEM. This will allow the 
+	 * player to recover health points by using the item.
+ 	 * @param item The item to use.
+	 * @return A display message depicting the outcome of the method call when using the item. 
+	 */
+	public String useItem(GameItem item)
+	{
+		boolean notUsed = true;
+		int index = 0;
+		for (index = 0; index < this.inventory.length && notUsed; index++)
+		{
+			if (this.inventory[index] == item)
+			{
+				if (item.getType() == ItemType.ITEM)
+				{
+					this.healthPoints += item.getValue();
+					if (this.healthPoints > this.maxHealth)
+						this.healthPoints = this.maxHealth;
+					this.inventory[index] = null;
+					notUsed = false;
+				}
+			}
+		}
+		if (notUsed)
+		{
+			//System.out.println("Game Item " + item + " was NOT used. Remaining health points is " + this.healthPoints);
+			return "Game Item " + item + " was NOT used. The item cannot be armor or a weapon, must be an item to use.";
+		}
+		else
+		{
+			//System.out.println("Game Item " + item + " was NOT used. Remaining health points is " + this.healthPoints);
+			return "Game Item " + item + " was used. Remaining health points is " + this.healthPoints;
+		}
+	}
+
 	/**Method: toString
 	 * @see java.lang.Object#toString()
 	 */
@@ -225,9 +248,9 @@ public class GamePlayer extends GameCharacter
 			itemStats += item.toString() + "\n";
 		}
 		return super.toString() + "\n"
-				+ "Max Health:\t" + maxHealth + "\nScore\t" + score + "\nInventory:\n" + itemStats;
+		+ "Max Health:\t" + maxHealth + "\nScore\t" + score + "\nInventory:\n" + itemStats;
 	}
-	
+
 	/**public static void main(String[] args)
 	{
 		GameItem item = new GameItem("Fire Sword", "100", "Sword on fire.", "WEAPON");
@@ -236,7 +259,7 @@ public class GamePlayer extends GameCharacter
 		player.addItem(item);
 		System.out.println(player);
 	}*/
-	
-	
+
+
 
 }
