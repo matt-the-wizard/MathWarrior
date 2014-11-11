@@ -1,6 +1,9 @@
 package math.warrior.view;
 
 //Imports
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -65,7 +68,7 @@ public class GameUI extends Application
 	private final Font TEXT_FONT_STYLE_TITLE = Font.font("Verdana", 15);
 
 	//Permanent Commands - TO DO: Must replace with commands from DBMS
-	private String[] textCommands = {"Save Game", "Exit Game", "Move up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats"};
+	private String[] textCommands = {"Save Game", "Exit Game", "Edit Game", "Move up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats", "Use Item ____", "Equip Item _____", "Drop Item _____"};
 	//private GameMap map;
 	private GamePlayer player;
 	private Database database;
@@ -157,12 +160,6 @@ public class GameUI extends Application
 		this.scrollPane.setStyle(this.FX_BLACK_BGCOLOR);
 		this.borderPane.setBottom(this.scrollPane);
 	}
-	
-	private void processGameData()
-	{
-		this.database = new Database();
-		
-	}
 
 	/**Method: start
 	 * This is called to show the display window to the user. 
@@ -173,6 +170,7 @@ public class GameUI extends Application
 	{
 		this.borderPane = new BorderPane();
 		this.borderPane.setStyle(this.FX_BLACK_BGCOLOR);
+		this.database = new Database();
 		this.createLeftPane();
 		this.createCenterPane();
 		this.createBottomPane();

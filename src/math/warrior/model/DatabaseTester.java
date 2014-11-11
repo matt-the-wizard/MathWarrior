@@ -13,31 +13,27 @@ public class DatabaseTester
 	{	
 		ResultSet set = database.executeQuery(""
 				+ "select  * from Rooms "
-				+ " join Monsters on Rooms.RoomID = Monsters.ID "
+				+ " join Monsters on Rooms.RoomID = Monsters.MID "
 				+ " join Players on Rooms.PlayerID = Players.PlayerID "
 				+ " where Players.PlayerID = " + playerID);
 		try
 		{
 			while(set.next())
 			{
+				//System.out.println(set.getString("RoomName"));
 				String roomName = set.getString("RoomName");
-				System.out.println(roomName);
 				String roomDescription = set.getString("RoomDescription");
-				System.out.println(roomDescription);
-				//String solved = set.getString("Solved");
-				//String monsterName = set.getString("Name");
-				//System.out.println(monsterName);
-				//String monsterDescription = set.getString("Description");
-				//System.out.println(monsterDescription);
-				//String monsterStrength = set.getString("Strength");
-				//System.out.println(monsterStrength);
-				//String monsterHealth = set.getString("Health");
-				//String monsterTerminator = set.getString("Terminator");
-				//String attackDescription = set.getString("AttackDescription");
-				System.out.println(set.getString("Password"));
-				System.out.println(set.getString("Monsters.Name"));
-				//create monster
-				//create room
+				String solved = set.getString("Solved");
+				String monsterName = set.getString("MonsterName");
+				String monsterDescription = set.getString("MonsterDescription");
+				String monsterStrength = set.getString("MonsterStrength");
+				String monsterHealth = set.getString("MonsterHealth");
+				String attackDescription = set.getString("MonsterAttackDescription");
+				String password = set.getString("Password");
+				String playerName = set.getString("PlayerName");
+				GameMonster monster = new GameMonster(monsterName, monsterDescription, monsterHealth, monsterStrength, attackDescription);
+				GameRoom room = new GameRoom(roomName, roomDescription, solved, monster, null, null);
+				System.out.println(room + "\n");
 				//add room to map
 			}
 		} 

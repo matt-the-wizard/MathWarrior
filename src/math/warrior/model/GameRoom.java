@@ -27,13 +27,13 @@ public class GameRoom
 	 * @param puzzle Puzzle in the room
 	 * @param item Item in the room
 	 */
-	public GameRoom(String name, String description, boolean isSolved,
+	public GameRoom(String name, String description, String isSolved,
 			GameMonster monster, GamePuzzle puzzle, GameItem item)
 	{
 		super();
 		this.name = name;
 		this.description = description;
-		this.isSolved = isSolved;
+		this.setSolved(isSolved);
 		this.monster = monster;
 		this.puzzle = puzzle;
 		this.item = item;
@@ -91,6 +91,15 @@ public class GameRoom
 	public void setSolved(boolean isSolved)
 	{
 		this.isSolved = isSolved;
+	}
+	
+	/**Method: setSolved
+	 * Setter method for setting the isSolved value.
+	 * @param isSolved the isSolved to set
+	 */
+	public void setSolved(String isSolved)
+	{
+		this.isSolved = Boolean.parseBoolean(isSolved);
 	}
 
 	/**Method: getMonster
