@@ -1,37 +1,39 @@
-/**Class: TextHandlerListener.java
- * @author: Matthew Berger
- * @version 1.0
- * Date Written/Updated: Oct 20, 2014
- * Class Description:
- */
 package math.warrior.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import math.warrior.model.Database;
+import math.warrior.model.GameMap;
 import math.warrior.model.GamePlayer;
 
-/**Types
- * @author Matt
+/**Class: TextHandlerListener.java
+ * @author: Matthew Berger
+ * @version 1.0
+ * Date Written/Updated: Oct 20, 2014
+ * Class Description: This is the listener attached to the text input box that takes in player commands.
+ * This will do all business logic handling and will access the model and update the view. 
  */
 public class TextHandlerListener implements EventHandler<ActionEvent>
 {
 	private TextArea textArea;
 	private TextField data;
-	//private GameMap gameMap;
+	private GameMap gameMap;
 	private GamePlayer gamePlayer;
-
+	private Database database;
+	
 	/**Constructor
-	 * 
+	 * This passes in all needed objects for the command handling. 
 	 */
-	public TextHandlerListener(TextArea area, TextField userEntry, //GameMap map
-			 GamePlayer player)
+	public TextHandlerListener(TextArea area, TextField userEntry, GameMap map,
+			 GamePlayer player, Database database)
 	{
 		this.textArea = area;
 		this.data = userEntry;
-		//this.gameMap = map;
+		this.gameMap = map;
 		this.gamePlayer = player;
+		this.database = database;
 	}
 	
 	private void clearCommandBox()

@@ -112,7 +112,7 @@ public class GamePuzzle
 	@Override
 	public String toString()
 	{
-		return "Description:\t" + description + "\nTerminator:\t"
+		return "\nDescription:\t" + description + "\nTerminator:\t"
 				+ terminator +  "\nHint:\t" + hint
 				+ "\nSolved Message:\t" + solvedMessage + "";
 	}

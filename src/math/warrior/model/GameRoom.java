@@ -163,9 +163,9 @@ public class GameRoom
 	@Override
 	public String toString()
 	{
-		return "Name:\t" + name + "\nDescription:\t" + description
+		return "Room:\t" + name + "\nDescription:\t" + description
 				+ "\nSolved:\t" + isSolved + "\nMonster:\n" + monster
-				+ "\nPuzzle:\n" + puzzle + "\nItem:\n" + item + ".";
+				+ "\nPuzzle:\n" + puzzle + "\nItem:\t" + item + "";
 	}
 	
 	/*public static void main(String[] args)

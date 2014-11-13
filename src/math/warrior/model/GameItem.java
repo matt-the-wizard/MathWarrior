@@ -145,7 +145,7 @@ public class GameItem
 	@Override
 	public String toString()
 	{
-		return "\nName:\t" + name + "\nValue:\t" + value + "\nDescription:\t"
+		return "\nItem:\t" + name + "\nValue:\t" + value + "\nDescription:\t"
 				+ description + "\nType:\t" + type + ".\n";
 	}
 	
