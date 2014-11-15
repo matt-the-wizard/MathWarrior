@@ -51,11 +51,11 @@ public class GameUI
 	private TextArea commandResultBox;
 
 	//Styling Constants for UI Design
-	private Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-	private final double MAX_WINDOW_HEIGHT = visualBounds.getMaxX();
-	private final double MAX_WINDOW_WIDTH =  visualBounds.getMaxY(); 
-	//public static final double MAX_WINDOW_HEIGHT = 700;
-	//public static final double MAX_WINDOW_WIDTH = 1100;
+	//private Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+	//private final double MAX_WINDOW_HEIGHT = visualBounds.getMaxX();
+	//private final double MAX_WINDOW_WIDTH =  visualBounds.getMaxY(); 
+	public static final double MAX_WINDOW_HEIGHT = 700;
+	public static final double MAX_WINDOW_WIDTH = 1100;
 	public static final double MAX_BUTTON_HEIGHT = 50;
 	public static final double MAX_BUTTON_WIDTH = 70;
 	public static  int VBOX_SPACING = 3;
@@ -183,11 +183,13 @@ public class GameUI
 	{
 		this.commandResultBox = new TextArea(); 
 		this.commandResultBox.setWrapText(true);
-		this.commandResultBox.setMinWidth(MAX_WINDOW_WIDTH);
+		//this.commandResultBox.setMinWidth(MAX_WINDOW_WIDTH);
 		this.commandResultBox.setStyle(FX_BLACK_BGCOLOR);
 		this.commandResultBox.setFont(TEXT_FONT_STYLE_TITLE);
 		this.scrollPane = new ScrollPane(this.commandResultBox);
 		this.scrollPane.setStyle(FX_BLACK_BGCOLOR);
+		this.scrollPane.setFitToWidth(true);
+		this.scrollPane.setFitToHeight(true);
 		this.borderPane.setBottom(this.scrollPane);
 	}
 	

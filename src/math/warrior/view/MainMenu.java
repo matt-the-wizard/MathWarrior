@@ -27,14 +27,14 @@ public class MainMenu extends Application
 	//Attributes
 	private Button exitButton, 	newGameButton, 	loadGameButton, submitPlayer; //Buttons
 	private Scene mainMenuScene; //Holds Layout
-	private VBox mainMenuGroup, newPlayerVbox; //Layout
+	private VBox mainMenuGroup, newPlayerVbox, loadPlayerVbox; //Layout
 	private Label welcomeLabel, passwordLabel, nameLabel; //Labels
 	private TextField passwordText, nameText; //TextFields
 	//Important Game Components
 	private Database database;
 	private GameMap map;
 	private GamePlayer player;
-	
+
 	/**Method: instantiateWidgets
 	 * Helper method to style the widget objects used in the scene of this stage. 
 	 * Does font style, color, and spacing. 
@@ -51,7 +51,7 @@ public class MainMenu extends Application
 		this.newGameButton = new Button("New Game");
 		this.newGameButton.setFont(GameUI.TEXT_FONT_STYLE);
 	}
-	
+
 	/**Method: setUpWindow
 	 * Adds all widget objects to the stage. 
 	 * @param stage The main stage. 
@@ -72,7 +72,7 @@ public class MainMenu extends Application
 		stage.sizeToScene();
 		stage.show();
 	}
-	
+
 	/**
 	 * Method: start
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
@@ -82,24 +82,21 @@ public class MainMenu extends Application
 	public void start(Stage stage)
 	{
 		instantiateWidgets();
+		this.database = new Database();
 		this.loadGameButton.setOnAction(new EventHandler<ActionEvent>()
 				{
-					@Override
-					public void handle(ActionEvent arg0)
-					{
-						//Create player by loading from the database
-						//get map based on player from the database
-						//pass in all three to the game UI, then start handling commands put in by user in the game UI
-						//GameUI gameWindow = new GameUI(database, player, map);
-						//Stage stage = gameWindow.getStage();
-						//stage.show();
-					}
+			@Override
+			public void handle(ActionEvent arg0)
+			{
+				loadPlayer();
+			}
 				});
 		this.exitButton.setOnAction(new EventHandler<ActionEvent>() 
 				{
 			@Override
 			public void handle(ActionEvent arg0) 
 			{
+				//Close out the game if they wish to exit.
 				System.exit(0);
 			}
 				});
@@ -108,21 +105,90 @@ public class MainMenu extends Application
 			@Override
 			public void handle(ActionEvent arg0) 
 			{
+				//this will add the player to the database as well as populate database with their default game data.
 				createNewPlayer();
-				//load game data
-				//start game UI
 			}
 				});
 		setUpWindow(stage);
 	}
-	
+
+	/**Method: loadPlayer
+	 * Load the game information from the database based on the player. The player is chosen
+	 * by the user typing in their password into the text field which is then referenced from the database.
+	 */
+	public void loadPlayer()
+	{
+		final Stage stage = new Stage();
+		instantiateLoadPlayerWidgets();
+		submitPlayer.setOnAction(new EventHandler<ActionEvent>() 
+				{
+			@Override
+			public void handle(ActionEvent arg0) 
+			{
+				//Get user password
+				String password = passwordText.getText().trim();
+				try
+				{
+					int playerId = database.loadPlayerId(password);
+					//Gather game data
+					player = database.loadGamePlayer(playerId);
+					map = database.loadGameMap(playerId);
+					//Start the game UI
+					GameUI gameWindow = new GameUI(database, player, map);
+					Stage gameStage = gameWindow.getStage();
+					gameStage.show();
+					stage.close();
+				}
+				catch(NullPointerException npe)
+				{
+					passwordText.setText("Player not found, try another password.");
+				}
+				catch(Exception e)
+				{
+					passwordText.setText("Player not found, try another password.");
+				}
+			}
+				});
+		setUpLoadPlayerWindow(stage);
+	}
+
+	/**Method: instantiateLoadPlayerWidgets
+	 * This helper method instantiates the widgets for the new player window stage. 
+	 */
+	private void instantiateLoadPlayerWidgets()
+	{
+		this.loadPlayerVbox = new VBox();
+		this.loadPlayerVbox .setStyle(GameUI.FX_BLACK_BGCOLOR);
+		this.loadPlayerVbox .setPadding(GameUI.WIDGET_PADDING);
+		this.loadPlayerVbox .setSpacing(GameUI.VBOX_SPACING);
+		passwordLabel = new Label("Enter Password:");
+		passwordLabel.setTextFill(GameUI.TEXT_COLOR);
+		passwordLabel.setFont(GameUI.TEXT_FONT_STYLE);
+		passwordText = new TextField();
+		submitPlayer = new Button("Submit Player Information");
+	}
+
+	/**Method: setUpLoadPlayerWindow
+	 * Helper method to add widget objects to the scene.
+	 * @param stage The stage to hold the widget objects. 
+	 */
+	private void setUpLoadPlayerWindow(Stage stage)
+	{
+		this.loadPlayerVbox.getChildren().add(this.passwordLabel);
+		this.loadPlayerVbox.getChildren().add(this.passwordText);
+		this.loadPlayerVbox.getChildren().add(this.submitPlayer);
+		Scene scene = new Scene(this.loadPlayerVbox, 300, 300);
+		stage.setScene(scene);
+		stage.show();
+	}
+
 	/**Method: createNewPlayer
 	 * This method will put the new player in the database by getting information from the view.
 	 * The user will then be returned back to the main menu screen to load their game.
 	 */
 	private void createNewPlayer()
 	{
-		Stage stage = new Stage();
+		final Stage stage = new Stage();
 		stage.setTitle("Create Player");
 		instantiateNewPlayerWidgets();
 		submitPlayer.setOnAction(new EventHandler<ActionEvent>() 
@@ -130,16 +196,26 @@ public class MainMenu extends Application
 			@Override
 			public void handle(ActionEvent arg0) 
 			{
+				//TO DO: validate user-name and password before adding player.
 				String password = passwordText.getText().trim();
 				String userName = nameText.getText().trim();
-				//execute update query to database to create new user.
-				//add records to all tables in database for the new player.
+				//query that inserts player into database with defaults.
+				database.executeQuery("INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength], "
+						+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "');");
+				//add records to all tables in database for the new player based on their id
+				int playerID = database.loadPlayerId(password);
+				database.genItemRecordsForNewPlayer(playerID);
+				database.genLocationForNewPlayer(playerID);
+				database.genMonsterRecordsForNewPlayer(playerID);
+				database.genPuzzleRecordsForNewPlayer(playerID);
+				database.genItemRecordsForNewPlayer(playerID);
 				//terminate window
+				stage.close();
 			}
 				});
 		setUpNewPlayerWindow(stage);
 	}
-	
+
 	/**Method: setUpNewPlayerWindow
 	 * Helper method to add widget objects to the scene.
 	 * @param stage The stage to hold the widget objects. 
@@ -155,7 +231,7 @@ public class MainMenu extends Application
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+
 	/**Method: instantiateNewPlayerWidgets
 	 * This helper method instantiates the widgets for the new player window stage. 
 	 */
@@ -165,7 +241,7 @@ public class MainMenu extends Application
 		newPlayerVbox.setStyle(GameUI.FX_BLACK_BGCOLOR);
 		newPlayerVbox.setPadding(GameUI.WIDGET_PADDING);
 		newPlayerVbox.setSpacing(GameUI.VBOX_SPACING);
-        nameLabel = new Label("Enter Player Name:");
+		nameLabel = new Label("Enter Player Name:");
 		nameLabel.setFont(GameUI.TEXT_FONT_STYLE);
 		nameLabel.setTextFill(GameUI.TEXT_COLOR);
 		nameText = new TextField();

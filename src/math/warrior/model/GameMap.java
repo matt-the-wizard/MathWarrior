@@ -34,7 +34,7 @@ public class GameMap
 		{
 			for (int innerIndex = 0; innerIndex < 5; innerIndex++)
 			{
-				this.rooms[outerIndex][innerIndex] = rooms.get(outerIndex + innerIndex);
+				this.rooms[innerIndex][outerIndex] = rooms.get(outerIndex + innerIndex);
 			}
 		}
 	}
