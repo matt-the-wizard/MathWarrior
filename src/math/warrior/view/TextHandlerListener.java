@@ -15,6 +15,8 @@ import math.warrior.model.GamePlayer;
  * Class Description: This is the listener attached to the text input box that takes in player commands.
  * This will do all business logic handling and will access the model and update the view. 
  */
+
+//edited Some things to work with the InvalidCommandException class -Brock
 public class TextHandlerListener implements EventHandler<ActionEvent>
 {
 	private TextArea textArea;
@@ -22,12 +24,12 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	private GameMap gameMap;
 	private GamePlayer gamePlayer;
 	private Database database;
-	
+
 	/**Constructor
 	 * This passes in all needed objects for the command handling. 
 	 */
 	public TextHandlerListener(TextArea area, TextField userEntry, GameMap map,
-			 GamePlayer player, Database database)
+			GamePlayer player, Database database)
 	{
 		this.textArea = area;
 		this.data = userEntry;
@@ -35,7 +37,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		this.gamePlayer = player;
 		this.database = database;
 	}
-	
+
 	private void clearCommandBox()
 	{
 		this.data.setText("");
@@ -80,7 +82,13 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 	}
 
-	private void handleCommand(String[] commandValues)
+	/** Method: handleCommand
+	 * This handles command input.
+	 * This method will handle all user input to 
+	 * direct what will simulate in the game. 
+	 * @throws Exception if a valid command is not entered
+	 */
+	private void handleCommand(String[] commandValues) throws InvalidCommandException
 	{
 		if (commandValues[0].equalsIgnoreCase("move"))
 		{
@@ -88,25 +96,35 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 		else if (commandValues[0].equalsIgnoreCase("quit") && commandValues[1].equalsIgnoreCase("game"))
 		{
-			
+
 		}
 		else if (commandValues[0].equalsIgnoreCase("save") && commandValues[1].equalsIgnoreCase("game"))
 		{
 			//save game method
+		}
+		else
+		{
+			throw new InvalidCommandException();
 		}
 	}
 
 	/**Method: handle
 	 * @param event The event source that was found.
 	 * This method handles the user pressing enter in the text box that 
-	 * takes in text commands. This method will handle all user input to 
-	 * direct what will simulate in the game. 
+	 * takes in text commands. 
 	 */
 	@Override
-	public void handle(ActionEvent event)
+	public void handle(ActionEvent event) 
 	{
 		String[] commandValues = this.data.getText().toString().trim().split(" ");
-		this.handleCommand(commandValues);
+		try
+		{
+			this.handleCommand(commandValues);
+		}
+		catch(InvalidCommandException ice)
+		{
+			this.textArea.setText(ice.getMessage());
+		}
 		this.clearCommandBox();
 	}
 
