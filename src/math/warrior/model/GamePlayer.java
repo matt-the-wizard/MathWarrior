@@ -21,7 +21,10 @@ public class GamePlayer extends GameCharacter
 	/**Constructor
 	 * @param name Name of the game player
 	 * @param healthPoints Health Points of the player
+	 * @param maxHealth Maximum Health of the player
 	 * @param strength Strength of the player
+	 * @param inventory Inventory of game items.
+	 * @param score The player's current game score
 	 */
 	public GamePlayer(String name, String healthPoints, String maxHealth, String strength, GameItem[] inventory, String score)
 	{
@@ -242,13 +245,8 @@ public class GamePlayer extends GameCharacter
 	@Override
 	public String toString()
 	{
-		String itemStats = "";
-		for (GameItem item: inventory)
-		{
-			itemStats += item.toString() + "\n";
-		}
 		return super.toString() + "\n"
-		+ "Max Health:\t" + maxHealth + "\nScore\t" + score + "\nInventory:\n" + itemStats;
+		+ "Max Health:\t" + maxHealth + "\nScore\t" + score + "\nInventory:\n" + Arrays.toString(inventory);
 	}
 
 	/**public static void main(String[] args)

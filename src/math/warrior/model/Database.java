@@ -466,7 +466,7 @@ public class Database
 	{
 		GameItem[] inventory = this.loadInventory(playerID);
 		GamePlayer player = null;
-		ResultSet set = this.executeQuery("select * from Players where Players.PlayerID = " + playerID);
+		ResultSet set = this.executeQuery("select * from Players where PlayerID = " + playerID);
 		try
 		{
 			if (set.next())
@@ -477,6 +477,7 @@ public class Database
 				String strength = set.getString("Strength");
 				String score = set.getString("Score");
 				player = new GamePlayer(name, healthPoints, maxHealth, strength, inventory, score);
+				System.out.println("returning player");
 				return player;
 			}
 		} 
@@ -516,6 +517,33 @@ public class Database
 		map = new GameMap(rooms, xPos, yPos);
 		return map;
 	}
-
+	
+	public void saveLocation()
+	{
+		
+	}
+	
+	public void saveGamePlayer()
+	{
+		
+	}
+	
+	public void saveRooms()
+	{
+		
+	}
+	
+	public void saveInventory()
+	{
+		
+	}
+	
+	/**public static void main(String[] args)
+	{
+		Database database = new Database();
+		GamePlayer player = database.loadGamePlayer(3);
+		System.out.println(player);
+	}*/
+	
 }
 

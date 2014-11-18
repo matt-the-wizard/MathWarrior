@@ -201,7 +201,7 @@ public class MainMenu extends Application
 				String userName = nameText.getText().trim();
 				//query that inserts player into database with defaults.
 				database.executeQuery("INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength], "
-						+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "');");
+						+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "')");
 				//add records to all tables in database for the new player based on their id
 				int playerID = database.loadPlayerId(password);
 				database.genItemRecordsForNewPlayer(playerID);
