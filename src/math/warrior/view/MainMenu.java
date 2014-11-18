@@ -127,26 +127,15 @@ public class MainMenu extends Application
 			{
 				//Get user password
 				String password = passwordText.getText().trim();
-				try
-				{
-					int playerId = database.loadPlayerId(password);
-					//Gather game data
-					player = database.loadGamePlayer(playerId);
-					map = database.loadGameMap(playerId);
-					//Start the game UI
-					GameUI gameWindow = new GameUI(database, player, map);
-					Stage gameStage = gameWindow.getStage();
-					gameStage.show();
-					stage.close();
-				}
-				catch(NullPointerException npe)
-				{
-					passwordText.setText("Player not found, try another password.");
-				}
-				catch(Exception e)
-				{
-					passwordText.setText("Player not found, try another password.");
-				}
+				int playerId = database.loadPlayerId(password);
+				//Gather game data
+				player = database.loadGamePlayer(playerId);
+				map = database.loadGameMap(playerId);
+				//Start the game UI
+				GameUI gameWindow = new GameUI(database, player, map);
+				Stage gameStage = gameWindow.getStage();
+				gameStage.show();
+				stage.close();
 			}
 				});
 		setUpLoadPlayerWindow(stage);
@@ -196,21 +185,31 @@ public class MainMenu extends Application
 			@Override
 			public void handle(ActionEvent arg0) 
 			{
-				//TO DO: validate user-name and password before adding player.
-				String password = passwordText.getText().trim();
-				String userName = nameText.getText().trim();
-				//query that inserts player into database with defaults.
-				database.executeQuery("INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength], "
-						+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "')");
-				//add records to all tables in database for the new player based on their id
-				int playerID = database.loadPlayerId(password);
-				database.genItemRecordsForNewPlayer(playerID);
-				database.genLocationForNewPlayer(playerID);
-				database.genMonsterRecordsForNewPlayer(playerID);
-				database.genPuzzleRecordsForNewPlayer(playerID);
-				database.genItemRecordsForNewPlayer(playerID);
-				//terminate window
-				stage.close();
+				try
+				{//TO DO: validate user-name and password before adding player.
+					String password = passwordText.getText().trim();
+					String userName = nameText.getText().trim();
+					//query that inserts player into database with defaults.
+					database.executeQuery("INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength], "
+							+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "');");
+					//add records to all tables in database for the new player based on their id
+					int playerID = database.loadPlayerId(password);
+					database.genRoomRecordsForNewPlayer(playerID);
+					database.genLocationForNewPlayer(playerID);
+					database.genMonsterRecordsForNewPlayer(playerID);
+					database.genPuzzleRecordsForNewPlayer(playerID);
+					database.genItemRecordsForNewPlayer(playerID);
+					//terminate window
+					stage.close();
+				}
+				catch(NullPointerException npe)
+				{
+					passwordText.setText("Player not found, try another password.");
+				}
+				catch(Exception e)
+				{
+					passwordText.setText("Player not found, try another password.");
+				}
 			}
 				});
 		setUpNewPlayerWindow(stage);

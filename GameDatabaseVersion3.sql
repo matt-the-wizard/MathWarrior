@@ -75,8 +75,8 @@ INSERT INTO [Rooms] ([RoomID], [RoomName], [RoomDescription], [PlayerID], [Solve
 
 -- Table: Monsters
 CREATE TABLE Monsters ( 
-    MID                        PRIMARY KEY
-                              REFERENCES Rooms ( RoomID ),
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    MID   INTEGER      REFERENCES Rooms ( RoomID ),
     MonsterName              CHAR,
     MonsterDescription       CHAR,
     MonsterStrength          INTEGER,
@@ -111,8 +111,8 @@ INSERT INTO [Monsters] ([MID], [MonsterName], [MonsterDescription], [MonsterStre
 
 -- Table: Puzzles
 CREATE TABLE Puzzles ( 
-    PID                 PRIMARY KEY
-                       REFERENCES Rooms ( RoomID ),
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PID        INTEGER REFERENCES Rooms ( RoomID ),
     PuzzleDescription   CHAR,
     PuzzleHint          CHAR,
     PuzzleTerminator    CHAR,
@@ -137,8 +137,8 @@ INSERT INTO [Puzzles] ([PID], [PuzzleDescription], [PuzzleHint], [PuzzleTerminat
 
 -- Table: Items
 CREATE TABLE Items ( 
-    ItemID                  PRIMARY KEY
-                        REFERENCES Rooms ( RoomID ),
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ItemID   INTEGER REFERENCES Rooms ( RoomID ),
     ItemName        CHAR,
     Type        CHAR,
     ItemDescription CHAR,

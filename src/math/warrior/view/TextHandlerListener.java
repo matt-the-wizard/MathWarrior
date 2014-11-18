@@ -37,6 +37,9 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		this.gameMap = map;
 		this.gamePlayer = player;
 		this.database = database;
+		this.textArea.setText("Welcome " + player.toString());
+		this.textArea.appendText(map.toString());
+		this.textArea.appendText("Size " + map.getRooms().size());
 	}
 
 	/**Method: clearCommandBox

@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class GameMap
 {
 	//Attributes
-	private GameRoom[][] rooms;
+	private ArrayList<GameRoom> rooms;
 	private int xPostion;
 	private int yPostion;
 
@@ -27,16 +27,9 @@ public class GameMap
 	 */
 	public GameMap(ArrayList<GameRoom> rooms, String xPos, String yPos)
 	{
-		this.rooms = new GameRoom[5][10];
 		this.setxPostion(xPostion);
 		this.setyPostion(yPostion);
-		for (int outerIndex = 0; outerIndex < 10; outerIndex++)
-		{
-			for (int innerIndex = 0; innerIndex < 5; innerIndex++)
-			{
-				this.rooms[innerIndex][outerIndex] = rooms.get(outerIndex + innerIndex);
-			}
-		}
+		this.rooms = rooms;
 	}
 
 	/**Method: getxPostion
@@ -113,7 +106,7 @@ public class GameMap
 	 * Getter method for this instances's rooms
 	 * @return the rooms
 	 */
-	public GameRoom[][] getRooms()
+	public ArrayList<GameRoom> getRooms()
 	{
 		return rooms;
 	}
@@ -122,7 +115,7 @@ public class GameMap
 	 * Setter method for setting the rooms value.
 	 * @param rooms the rooms to set
 	 */
-	public void setRooms(GameRoom[][] rooms)
+	public void setRooms(ArrayList<GameRoom> rooms)
 	{
 		this.rooms = rooms;
 	}
@@ -134,8 +127,8 @@ public class GameMap
 	@Override
 	public String toString()
 	{
-		return "Game Map\nRooms:" + Arrays.toString(rooms) + "\nPlayer Position:\t(" + this.xPostion + "," + this.yPostion + ")";
+		return "Game Map\nRooms:" + rooms + "\nPlayer Position:\t(" + this.xPostion + "," + this.yPostion + ")";
 	}
 
-	
+
 }
