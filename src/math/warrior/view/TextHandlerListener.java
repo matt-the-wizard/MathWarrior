@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import math.warrior.model.Database;
 import math.warrior.model.GameMap;
 import math.warrior.model.GamePlayer;
+import math.warrior.model.InvalidCommandException;
 
 /**Class: TextHandlerListener.java
  * @author: Matthew Berger
@@ -38,6 +39,9 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		this.database = database;
 	}
 
+	/**Method: clearCommandBox
+	 * This method clears out the command text box from all text contents. 
+	 */
 	private void clearCommandBox()
 	{
 		this.data.setText("");
@@ -77,8 +81,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 		else
 		{
-			//TO DO: Replace with invalid command Exception class
-			this.textArea.appendText("Invalid navigation command.\n");
+			throw new InvalidCommandException();
 		}
 	}
 
@@ -123,7 +126,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 		catch(InvalidCommandException ice)
 		{
-			this.textArea.setText(ice.getMessage());
+			this.textArea.appendText(ice.getMessage() + "\n");
 		}
 		this.clearCommandBox();
 	}
