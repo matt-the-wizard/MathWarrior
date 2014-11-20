@@ -5,8 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import math.warrior.model.Database;
+import math.warrior.model.GameItem;
 import math.warrior.model.GameMap;
 import math.warrior.model.GamePlayer;
+import math.warrior.model.GameRoom;
 import math.warrior.model.InvalidCommandException;
 
 /**Class: TextHandlerListener.java
@@ -25,6 +27,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	private GameMap gameMap;
 	private GamePlayer gamePlayer;
 	private Database database;
+	private GameRoom[][] roomGrid;
 
 	/**Constructor
 	 * This passes in all needed objects for the command handling. 
@@ -37,9 +40,31 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		this.gameMap = map;
 		this.gamePlayer = player;
 		this.database = database;
-		this.textArea.setText("Welcome " + player.toString());
-		this.textArea.appendText(map.toString());
-		this.textArea.appendText("Size " + map.getRooms().size());
+		this.roomGrid = this.gameMap.putListIntoGrid();
+		//Sets up text in the text area when the game loads. 
+		this.textArea.setText("Welcome " + player.getName() + "\n");
+		displayRoomInfo(this.roomGrid[map.getxPostion()][map.getyPostion()]);
+	}
+
+	/**Method: displayRoomInfo
+	 * Displays the room and all of its contents if it is not solved. Makes sure to check
+	 * for valid content objects first, acts differently than a room toString.
+	 * @param room The room to show in the text area. 
+	 */
+	public void displayRoomInfo(GameRoom room)
+	{
+		this.textArea.appendText("You are in " + room.getName() + "\n" + room.getDescription());
+		if (room.isSolved())
+			this.textArea.appendText("\n There is nothing of interest here.");
+		else
+		{
+			if (room.getMonster() != null)
+				this.textArea.appendText("The room has monster " + room.getMonster().getName() + "\n" + room.getMonster().getDesciption());
+			else if (room.getPuzzle() != null)
+				this.textArea.appendText(room.getPuzzle().getDescription());
+			else if (room.getItem() != null)
+				this.textArea.appendText("The room contains " + room.getItem().getName());
+		}
 	}
 
 	/**Method: clearCommandBox
@@ -61,15 +86,19 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	{
 		if (commandValues.length > 1)
 		{
-			if (commandValues[1].equalsIgnoreCase("up"))
+			if (commandValues[1].equalsIgnoreCase("down"))
 			{
-				//move up
-				this.textArea.appendText("\nup");
+				if (this.gameMap.getyPostion() == 4)
+					this.gameMap.setyPostion(0);
+				this.gameMap.setyPostion(this.gameMap.getyPostion() + 1);
+				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
-			else if (commandValues[1].equalsIgnoreCase("down"))
+			else if (commandValues[1].equalsIgnoreCase("up"))
 			{
-				//move down
-				this.textArea.appendText("\ndown");
+				if (this.gameMap.getyPostion() == 0)
+					this.gameMap.setyPostion(4);
+				this.gameMap.setyPostion(this.gameMap.getyPostion() - 1);
+				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
 			else if (commandValues[1].equalsIgnoreCase("left"))
 			{
@@ -96,19 +125,55 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	 */
 	private void handleCommand(String[] commandValues) throws InvalidCommandException
 	{
-		if (commandValues[0].equalsIgnoreCase("move"))
+		try
 		{
-			this.movePlayer(commandValues);
+			if (!(commandValues.length > 0)) throw new InvalidCommandException();
+			if (commandValues[0].equalsIgnoreCase("move"))
+			{
+				this.movePlayer(commandValues);
+			}
+			else if (commandValues[0].equalsIgnoreCase("quit") && commandValues[1].equalsIgnoreCase("game"))
+			{
+				System.exit(0);
+			}
+			else if (commandValues[0].equalsIgnoreCase("save") && commandValues[1].equalsIgnoreCase("game"))
+			{
+				//save game method
+			}
+			else if (commandValues[0].equalsIgnoreCase("hint"))
+			{
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getPuzzle() != null)
+					this.textArea.appendText("\n In this room, " + room.getPuzzle().getHint() + "\n");
+				else
+					this.textArea.appendText("\nThere is no puzzle in this room. Refer to the command menu for commands to enter.\n");
+			}
+			else if (commandValues[0].equalsIgnoreCase("use") && commandValues[1].equalsIgnoreCase("item"))
+			{
+				try
+				{
+					boolean used = false;
+					for (GameItem item: this.gamePlayer.getInventory())
+					{
+						if (item.getName().equals(commandValues[2]))
+						{
+							this.textArea.appendText(this.gamePlayer.useItem(item));
+							used = true;
+						}
+					} 
+					if (!used) this.textArea.appendText("\nThe item selected was not found in inventory.\n");
+				}
+				catch(NullPointerException npe)
+				{
+					this.textArea.appendText("\nThe item selected was not found in inventory.\n");
+				}
+			}
+			else
+			{
+				throw new InvalidCommandException();
+			}
 		}
-		else if (commandValues[0].equalsIgnoreCase("quit") && commandValues[1].equalsIgnoreCase("game"))
-		{
-
-		}
-		else if (commandValues[0].equalsIgnoreCase("save") && commandValues[1].equalsIgnoreCase("game"))
-		{
-			//save game method
-		}
-		else
+		catch(ArrayIndexOutOfBoundsException exc)
 		{
 			throw new InvalidCommandException();
 		}

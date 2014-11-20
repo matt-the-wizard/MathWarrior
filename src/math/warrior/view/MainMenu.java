@@ -251,4 +251,8 @@ public class MainMenu extends Application
 		submitPlayer = new Button("Submit Player Information");
 	}
 
+	public static void main(String[] args)
+	{
+		launch(args);
+	}
 }

@@ -30,7 +30,7 @@ import math.warrior.model.GamePlayer;
  * @version 1.0
  * Date Written/Updated: Oct 19, 2014
  * Class Description: This is a UI Class that implements the user interface for the game. 
- * It uses a border pane with four sections: left, center, right, and bottom. Each section
+ * It uses a border pane with four sections: left, center, right. Each section
  * holds different UI components for the game to represent different functions of the game. 
  */
 public class GameUI 
@@ -39,13 +39,12 @@ public class GameUI
 	private Stage primaryStage;
 	private Scene mainScene;
 	private BorderPane borderPane;
-	private GridPane gridPane;
 	private VBox helpCommandViewArea, textCommandViewArea;
 	private ScrollPane scrollPane;
 	private TextHandlerListener listener;
 
 	//Attribute: Important Widget Objects in Layout Types
-	private final Image IMAGE = new Image("file:mathwarrior.gif");;
+	public static final Image IMAGE = new Image("file:mathwarrior.gif");;
 	private Label textDisplayLabel, commandHelpMenuLabel;
 	private TextField commandEntry;
 	private TextArea commandResultBox;
@@ -66,7 +65,7 @@ public class GameUI
 	public static final Font TEXT_FONT_STYLE_TITLE = Font.font("Verdana", 15);
 	
 	//Commands
-	private String[] textCommands = {"Save Game", "Exit Game", "Edit Game", "Move up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats", "Use Item ____", "Equip Item _____", "Drop Item _____"};
+	private String[] textCommands = {"Save Game", "Exit Game", "Edit Game", "Move Up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats", "Use Item ____", "Equip Item _____", "Drop Item _____"};
 	
 	//Game Components 
 	private GameMap map;
@@ -93,7 +92,6 @@ public class GameUI
 		this.map = map;
 		this.createLeftPane();
 		this.createCenterPane();
-		this.createBottomPane();
 		this.createRightPane();
 		this.mainScene = new Scene(this.borderPane);
 		primaryStage.setTitle("Math Warrior");
@@ -127,34 +125,6 @@ public class GameUI
 		this.borderPane.setLeft(this.helpCommandViewArea);
 	}
 
-	/**Method: createCenterPane
-	 * This method sets up the UI components for the center of the border pane. 
-	 * This also handles styling and dimensions of UI components. 
-	 */
-	private void createCenterPane()
-	{
-		this.gridPane = new GridPane();
-		this.gridPane.setPadding(WIDGET_PADDING);
-		Button button;
-		//TO DO: Add room objects to buttons - Another Class
-		for (int rows = 0; rows < 10; rows++)
-		{
-			for (int columns = 0; columns < 5; columns++)
-			{
-				button = new Button();
-				if (columns == 0 && rows == 0)
-					button.setBackground(new Background(new BackgroundImage(this.IMAGE, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, new BackgroundSize(50, 50, false, false, true, false))));
-				button.setTextFill(TEXT_COLOR);
-				//button.setBackground(new Background(new BackgroundImage(this.IMAGE, null, null, null, new BackgroundSize(50, 50, false, false, true, false))));
-				button.setMinHeight(MAX_BUTTON_HEIGHT);
-				button.setMinWidth(MAX_BUTTON_WIDTH);
-				this.gridPane.add(button, rows, columns);
-			}
-		}
-		this.gridPane.setStyle(FX_BLACK_BGCOLOR);
-		this.borderPane.setCenter(this.gridPane);
-	}
-
 	/**Method: createRightPane
 	 * This method sets up the UI components for the right side of the border pane.
 	 * This also handles styling of UI components and dimensions. 
@@ -175,11 +145,11 @@ public class GameUI
 		this.borderPane.setRight(this.textCommandViewArea);
 	}
 
-	/**Method: createBottomPane
-	 * This method sets up the UI components for the bottom of the border pane. 
+	/**Method: createCenterPane
+	 * This method sets up the UI components for the center of the border pane. 
 	 * This also handles styling and dimensions of UI components. 
 	 */
-	private void createBottomPane()
+	private void createCenterPane()
 	{
 		this.commandResultBox = new TextArea(); 
 		this.commandResultBox.setWrapText(true);
@@ -190,7 +160,7 @@ public class GameUI
 		this.scrollPane.setStyle(FX_BLACK_BGCOLOR);
 		this.scrollPane.setFitToWidth(true);
 		this.scrollPane.setFitToHeight(true);
-		this.borderPane.setBottom(this.scrollPane);
+		this.borderPane.setCenter(this.scrollPane);
 	}
 	
 	/**Method: getStage

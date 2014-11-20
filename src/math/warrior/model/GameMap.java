@@ -2,6 +2,9 @@ package math.warrior.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
+import javafx.scene.control.Button;
 
 /**Class: GameMap.java
  * @author: Brock Bearchell / Matt / Quan
@@ -29,6 +32,7 @@ public class GameMap
 	{
 		this.setxPostion(xPostion);
 		this.setyPostion(yPostion);
+		Collections.shuffle(rooms);
 		this.rooms = rooms;
 	}
 
@@ -118,6 +122,26 @@ public class GameMap
 	public void setRooms(ArrayList<GameRoom> rooms)
 	{
 		this.rooms = rooms;
+	}
+
+	public GameRoom[][] putListIntoGrid()
+	{
+		GameRoom[][] rooms = new GameRoom[10][5];
+		for (int rows = 0; rows < 10; rows++)
+		{
+			for (int columns = 0; columns < 5; columns++)
+			{
+				try
+				{
+					rooms[rows][columns] = this.rooms.get(rows + columns);
+				}
+				catch(NullPointerException npe)
+				{
+					System.out.println("Grid not made correctly.");
+				}
+			}
+		}
+		return rooms;
 	}
 
 	/**Method: toString
