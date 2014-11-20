@@ -2,8 +2,12 @@ package math.warrior.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.Stage;
 import math.warrior.model.Database;
 import math.warrior.model.GameItem;
 import math.warrior.model.GameMap;
@@ -53,17 +57,17 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	 */
 	public void displayRoomInfo(GameRoom room)
 	{
-		this.textArea.appendText("You are in " + room.getName() + "\n" + room.getDescription());
+		this.textArea.appendText("\nYou are in " + room.getName() + "\n" + room.getDescription());
 		if (room.isSolved())
 			this.textArea.appendText("\n There is nothing of interest here.");
 		else
 		{
 			if (room.getMonster() != null)
-				this.textArea.appendText("The room has monster " + room.getMonster().getName() + "\n" + room.getMonster().getDesciption());
+				this.textArea.appendText("\nThe room has monster " + room.getMonster().getName() + "\n" + room.getMonster().getDesciption());
 			else if (room.getPuzzle() != null)
 				this.textArea.appendText(room.getPuzzle().getDescription());
 			else if (room.getItem() != null)
-				this.textArea.appendText("The room contains " + room.getItem().getName());
+				this.textArea.appendText("\nThe room contains " + room.getItem().getName());
 		}
 	}
 
@@ -170,12 +174,48 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			}
 			else
 			{
-				throw new InvalidCommandException();
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getPuzzle() != null)
+				{
+					String entry = "";
+					for (String element: commandValues)
+						entry += element + " ";
+					if ((entry.trim()).equalsIgnoreCase(room.getPuzzle().getTerminator()))
+					{
+						this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setSolved(true);
+						this.textArea.appendText(room.getPuzzle().getSolvedMessage());
+						this.gamePlayer.setScore(this.gamePlayer.getScore() + 10);
+						this.winGame(this.gamePlayer.getScore());
+						
+					}
+					else
+					this.textArea.appendText("\n In this room, " + room.getPuzzle().getHint() + "\n");
+				}
+				else throw new InvalidCommandException();
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException exc)
 		{
 			throw new InvalidCommandException();
+		}
+	}
+	
+	/**Methhod: winGame
+	 * This exits the game when the player wins by achieving a score over 100.
+	 * @param score players score.
+	 */
+	public void winGame(int score)
+	{
+		if (this.gamePlayer.getScore() >= 100)
+		{
+			Stage stage = new Stage();
+			stage.setTitle("You Won The Game!");
+			FlowPane fPane = new FlowPane();
+			fPane.getChildren().add(new Label("CONGRATULATIONS! YOUR SCORE IS OVER 100 POINTS AND YOU WIN THE GAME!"));
+			Scene scene = new Scene(fPane);
+			stage.setScene(scene);
+			stage.show();
+			System.exit(0);
 		}
 	}
 
