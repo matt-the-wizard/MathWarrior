@@ -170,6 +170,61 @@ public class MainMenu extends Application
 		stage.setScene(scene);
 		stage.show();
 	}
+	
+	private String rateThePassword(String password){
+		/* Password must be at least 6 characters.
+		 * Password is recommended to include: lower, upper, digits, special charaxters:
+		 * 
+		 */
+		if (password.length()<6)
+			return "This password is too short. You can't set this as your password.";
+		int Strongness=0,i; Character c;
+		
+		// if pass has lower case
+		for (i=0;i<password.length();i++){
+			c=password.charAt(i);
+			if (('a'<=c)&&(c<='z')) {
+				Strongness++;
+				break;
+			}
+		}
+		
+		// if pass has upper case
+		for (i=0;i<password.length();i++){
+			c=password.charAt(i);
+			if (('A'<=c)&&(c<='Z')) {
+				Strongness++;
+				break;
+			}
+		}
+		
+		// if pass has digits
+		for (i=0;i<password.length();i++)
+		{
+			c=password.charAt(i);
+			if (('0'<=c)&&(c<='9')) 
+			{
+				Strongness++;
+				break;
+			}
+		}
+		// if pass has special characters
+		for (i=0;i<password.length();i++)
+		{
+			c=password.charAt(i);
+			if (((('A'<=c)&&(c<='Z'))==false)
+					&&((('a'<=c)&&(c<='z'))==false)
+					&&((('0'<=c)&&(c<='9'))==false)) 
+			{
+				Strongness++;
+				break;
+			}
+		}
+		String ratedMessage[]=
+			{"Very weak", "Weak", "Medium", "Strong" , "Very strong"};
+		
+		return ratedMessage[Strongness];
+	}
 
 	/**Method: createNewPlayer
 	 * This method will put the new player in the database by getting information from the view.
