@@ -98,7 +98,8 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			{
 				if (this.gameMap.getyPostion() == 4)
 					this.gameMap.setyPostion(0);
-				this.gameMap.setyPostion(this.gameMap.getyPostion() + 1);
+				else
+					this.gameMap.setyPostion(this.gameMap.getyPostion() + 1);
 				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
@@ -106,7 +107,8 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			{
 				if (this.gameMap.getyPostion() == 0)
 					this.gameMap.setyPostion(4);
-				this.gameMap.setyPostion(this.gameMap.getyPostion() - 1);
+				else
+					this.gameMap.setyPostion(this.gameMap.getyPostion() - 1);
 				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
@@ -114,7 +116,8 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			{
 				if (this.gameMap.getxPostion() == 0)
 					this.gameMap.setxPostion(9);
-				this.gameMap.setxPostion(this.gameMap.getxPostion() - 1);
+				else
+					this.gameMap.setxPostion(this.gameMap.getxPostion() - 1);
 				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
@@ -122,7 +125,8 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			{
 				if (this.gameMap.getxPostion() == 9)
 					this.gameMap.setxPostion(0);
-				this.gameMap.setxPostion(this.gameMap.getxPostion() + 1);
+				else
+					this.gameMap.setxPostion(this.gameMap.getxPostion() + 1);
 				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
@@ -243,7 +247,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 							this.textArea.appendText("\nYou have solved the puzzle in the room, congratulations! Score increased by 10 points.");
 					}
 					else
-						this.textArea.appendText("\n In this room, " + room.getPuzzle().getHint() + "\n");
+						this.textArea.appendText("\nIn this room, " + room.getPuzzle().getHint() + "\n");
 				}
 				else throw new InvalidCommandException();
 			}
@@ -253,7 +257,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			throw new InvalidCommandException();
 		}
 	}
-	
+
 	/**Method: solveEmptyRoom
 	 * This solves rooms with no contents by defaulting the to solved.
 	 * @param room A game room
