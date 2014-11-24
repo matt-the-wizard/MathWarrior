@@ -69,7 +69,7 @@ public class MainMenu extends Application
 		this.mainMenuScene = new Scene(mainMenuGroup,300,400);
 		stage.setTitle("Math Warrior - Main Menu");
 		stage.setScene(mainMenuScene);
-		//stage.setFullScreen(true);
+		stage.sizeToScene();
 		stage.show();
 	}
 
@@ -134,7 +134,6 @@ public class MainMenu extends Application
 				//Start the game UI
 				GameUI gameWindow = new GameUI(database, player, map);
 				Stage gameStage = gameWindow.getStage();
-				gameStage.setFullScreen(true);
 				gameStage.show();
 				stage.close();
 			}
@@ -169,11 +168,10 @@ public class MainMenu extends Application
 		this.loadPlayerVbox.getChildren().add(this.submitPlayer);
 		Scene scene = new Scene(this.loadPlayerVbox, 300, 300);
 		stage.setScene(scene);
-		stage.sizeToScene();
 		stage.show();
 	}
 	
-	private String rateThePassword(String password){
+	private String ratePassword(String password){
 		/* Password must be at least 6 characters.
 		 * Password is recommended to include: lower, upper, digits, special charaxters:
 		 * 
@@ -285,8 +283,6 @@ public class MainMenu extends Application
 		this.newPlayerVbox.getChildren().add(this.submitPlayer);
 		Scene scene = new Scene(this.newPlayerVbox, 300, 300);
 		stage.setScene(scene);
-		stage.sizeToScene();
-		//stage.setFullScreen(true);
 		stage.show();
 	}
 
