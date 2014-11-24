@@ -65,7 +65,7 @@ public class GameUI
 	public static final Font TEXT_FONT_STYLE_TITLE = Font.font("Verdana", 15);
 	
 	//Commands
-	private String[] textCommands = {"Save Game", "Exit Game", "Edit Game", "Move Up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats", "Use Item ____", "Equip Item _____", "Drop Item _____"};
+	private String[] textCommands = {"Save Game", "Exit Game", "Edit Game", "Show Location", "Move Up", "Move Down", "Move Right", "Move Left", "Use Weapon", "Hint", "Display Stats", "Use Item ____", "Add Item _____", "Drop Item _____"};
 	
 	//Game Components 
 	private GameMap map;
