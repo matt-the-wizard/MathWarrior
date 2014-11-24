@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import math.warrior.model.Database;
 import math.warrior.model.GameItem;
 import math.warrior.model.GameMap;
+import math.warrior.model.GameMonster;
 import math.warrior.model.GamePlayer;
 import math.warrior.model.GameRoom;
 import math.warrior.model.InvalidCommandException;
@@ -46,7 +47,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		this.database = database;
 		this.roomGrid = this.gameMap.putListIntoGrid();
 		//Sets up text in the text area when the game loads. 
-		this.textArea.setText("Welcome " + player.getName() + "\n");
+		this.textArea.setText("Welcome Math Warrior " + player.getName() + "\n");
 		displayRoomInfo(this.roomGrid[map.getxPostion()][map.getyPostion()]);
 	}
 
@@ -57,11 +58,14 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 	 */
 	public void displayRoomInfo(GameRoom room)
 	{
-		this.textArea.appendText("\nYou are in " + room.getName() + "\n" + room.getDescription());
 		if (room.isSolved())
+		{
+			this.textArea.appendText("\nYou are in " + room.getName() + "\n" + room.getDescription());
 			this.textArea.appendText("\n There is nothing of interest here.");
+		}
 		else
 		{
+			this.textArea.appendText("\nYou are in " + room.getName() + "\n" + room.getDescription());
 			if (room.getMonster() != null)
 				this.textArea.appendText("\nThe room has monster " + room.getMonster().getName() + "\n" + room.getMonster().getDesciption());
 			else if (room.getPuzzle() != null)
@@ -95,6 +99,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 				if (this.gameMap.getyPostion() == 4)
 					this.gameMap.setyPostion(0);
 				this.gameMap.setyPostion(this.gameMap.getyPostion() + 1);
+				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
 			else if (commandValues[1].equalsIgnoreCase("up"))
@@ -102,17 +107,24 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 				if (this.gameMap.getyPostion() == 0)
 					this.gameMap.setyPostion(4);
 				this.gameMap.setyPostion(this.gameMap.getyPostion() - 1);
+				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
 			else if (commandValues[1].equalsIgnoreCase("left"))
 			{
-				//move left
-				this.textArea.appendText("\nleft");
+				if (this.gameMap.getxPostion() == 0)
+					this.gameMap.setxPostion(9);
+				this.gameMap.setxPostion(this.gameMap.getxPostion() - 1);
+				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
+				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
 			else if (commandValues[1].equalsIgnoreCase("right"))
 			{
-				//move right
-				this.textArea.appendText("\nright");
+				if (this.gameMap.getxPostion() == 9)
+					this.gameMap.setxPostion(0);
+				this.gameMap.setxPostion(this.gameMap.getxPostion() + 1);
+				solveEmptyRoom(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
+				this.displayRoomInfo(this.roomGrid[this.gameMap.getxPostion()][gameMap.getyPostion()]);
 			}
 		}
 		else
@@ -142,7 +154,15 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			}
 			else if (commandValues[0].equalsIgnoreCase("save") && commandValues[1].equalsIgnoreCase("game"))
 			{
-				//save game method
+				//save game methods to be called
+			}
+			else if (commandValues[0].equalsIgnoreCase("show") && commandValues[1].equalsIgnoreCase("location"))
+			{
+				this.textArea.appendText("\nLocation is (" + this.gameMap.getxPostion() + "," + this.gameMap.getyPostion() + ").");
+			}
+			else if (commandValues[0].equalsIgnoreCase("display") && commandValues[1].equalsIgnoreCase("stats"))
+			{
+				this.textArea.appendText("\n" + this.gamePlayer.toString());
 			}
 			else if (commandValues[0].equalsIgnoreCase("hint"))
 			{
@@ -154,22 +174,53 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			}
 			else if (commandValues[0].equalsIgnoreCase("use") && commandValues[1].equalsIgnoreCase("item"))
 			{
-				try
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getItem() != null)
 				{
-					boolean used = false;
-					for (GameItem item: this.gamePlayer.getInventory())
-					{
-						if (item.getName().equals(commandValues[2]))
-						{
-							this.textArea.appendText(this.gamePlayer.useItem(item));
-							used = true;
-						}
-					} 
-					if (!used) this.textArea.appendText("\nThe item selected was not found in inventory.\n");
+					GameItem item = room.getItem();
+					this.textArea.appendText(this.gamePlayer.useItem(item));
 				}
-				catch(NullPointerException npe)
+			}
+			else if (commandValues[0].equalsIgnoreCase("drop") && commandValues[1].equalsIgnoreCase("item"))
+			{
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getItem() != null)
 				{
-					this.textArea.appendText("\nThe item selected was not found in inventory.\n");
+					GameItem item = room.getItem();
+					this.textArea.appendText(this.gamePlayer.dropItem(item));
+				}
+			}
+			else if (commandValues[0].equalsIgnoreCase("add") && commandValues[1].equalsIgnoreCase("item"))
+			{
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getItem() != null && room.getItem().getName().toLowerCase().contains(commandValues[2].toLowerCase()))
+				{
+					GameItem item = room.getItem();
+					this.textArea.appendText(this.gamePlayer.addItem(item));
+					this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setSolved(true);
+					this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setItem(null);
+				}
+			}
+			else if (commandValues[0].equalsIgnoreCase("use") && commandValues[1].equalsIgnoreCase("weapon"))
+			{
+				GameRoom room = this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()];
+				if (room.getMonster() != null)
+				{
+					this.textArea.appendText(this.gamePlayer.fightMonster(this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].getMonster()));
+					if (this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].getMonster().getHealthPoints() <= 0)
+					{
+						this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setSolved(true);
+						this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setMonster(null);
+						this.gamePlayer.setScore(this.gamePlayer.getScore() + 10);
+						if (this.winGame(this.gamePlayer.getScore()))
+							System.exit(0);
+						else
+							this.textArea.appendText("\nYou have solved the puzzle in the room, congratulations! Score increased by 10 points.");
+						if (this.loseGame(this.gamePlayer.getHealthPoints()))
+							System.exit(0);
+						else
+							this.textArea.appendText("\nPlayer's remaining health points is " + this.gamePlayer.getHealthPoints());
+					}
 				}
 			}
 			else
@@ -184,12 +235,15 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 					{
 						this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setSolved(true);
 						this.textArea.appendText(room.getPuzzle().getSolvedMessage());
+						this.roomGrid[this.gameMap.getxPostion()][this.gameMap.getyPostion()].setPuzzle(null);
 						this.gamePlayer.setScore(this.gamePlayer.getScore() + 10);
-						this.winGame(this.gamePlayer.getScore());
-						
+						if (this.winGame(this.gamePlayer.getScore()))
+							System.exit(0);
+						else
+							this.textArea.appendText("\nYou have solved the puzzle in the room, congratulations! Score increased by 10 points.");
 					}
 					else
-					this.textArea.appendText("\n In this room, " + room.getPuzzle().getHint() + "\n");
+						this.textArea.appendText("\n In this room, " + room.getPuzzle().getHint() + "\n");
 				}
 				else throw new InvalidCommandException();
 			}
@@ -200,13 +254,45 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 	}
 	
-	/**Methhod: winGame
+	/**Method: solveEmptyRoom
+	 * This solves rooms with no contents by defaulting the to solved.
+	 * @param room A game room
+	 */
+	private void solveEmptyRoom(GameRoom room)
+	{
+		if (room.getItem() == null && room.getPuzzle() == null && room.getMonster() == null)
+			room.setSolved(true);
+	}
+
+	/**Method: loseGame
+	 * This method handles a game over if the player's health falls below 0.
+	 * @param healthPoints The health points belonging to the player.
+	 * @return If the game was lost.
+	 */
+	public boolean loseGame(int healthPoints)
+	{
+		if (healthPoints <= 0)
+		{
+			Stage stage = new Stage();
+			stage.setTitle("GAME OVER!");
+			FlowPane fPane = new FlowPane();
+			fPane.getChildren().add(new Label("You have fallen to the minions of the haunted high school. GAME OVER!"));
+			Scene scene = new Scene(fPane);
+			stage.setScene(scene);
+			stage.show();
+			return true;
+		}
+		return false;
+	}
+
+	/**Method: winGame
 	 * This exits the game when the player wins by achieving a score over 100.
 	 * @param score players score.
+	 * @return If the game was won or not.
 	 */
-	public void winGame(int score)
+	public boolean winGame(int score)
 	{
-		if (this.gamePlayer.getScore() >= 100)
+		if (score >= 100)
 		{
 			Stage stage = new Stage();
 			stage.setTitle("You Won The Game!");
@@ -215,8 +301,9 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 			Scene scene = new Scene(fPane);
 			stage.setScene(scene);
 			stage.show();
-			System.exit(0);
+			return true;
 		}
+		return false;
 	}
 
 	/**Method: handle
@@ -234,7 +321,7 @@ public class TextHandlerListener implements EventHandler<ActionEvent>
 		}
 		catch(InvalidCommandException ice)
 		{
-			this.textArea.appendText(ice.getMessage() + "\n");
+			this.textArea.appendText("\n" + ice.getMessage());
 		}
 		this.clearCommandBox();
 	}

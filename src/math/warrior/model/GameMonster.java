@@ -22,8 +22,8 @@ public class GameMonster extends GameCharacter
 	public GameMonster(String name, String description, String healthPoints, String strength, String attackDesciption)
 	{
 		super(name, healthPoints, strength);
-		this.desciption=description;
-		this.attackDesciption=attackDesciption;
+		this.desciption = description;
+		this.attackDesciption = attackDesciption;
 	}
 
 

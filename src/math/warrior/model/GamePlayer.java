@@ -15,7 +15,6 @@ public class GamePlayer extends GameCharacter
 	private GameItem[] inventory;
 	private int maxHealth;
 	private int score;
-	public static boolean gameOver;
 	public static final int MAX_INVENTORY_SPACE = 5;
 
 	/**Constructor
@@ -165,12 +164,12 @@ public class GamePlayer extends GameCharacter
 		if (notAdded)
 		{
 			//System.out.println("Game Item " + item + " was NOT added to inventory at slot " + index);
-			return "Game Item " + item + " was NOT added to inventory. Maximum capacity is filled in inventory.\n";
+			return "\n" + item + " was NOT added to inventory. Maximum capacity is filled in inventory.\n";
 		}
 		else
 		{
 			//System.out.println("Game Item " + item + " was added to inventory because inventory is full.");
-			return "Game Item " + item + " was added to inventory."+ "\n" + equippedMessage;
+			return "\n" + item + " was added to inventory."+ "\n" + equippedMessage;
 		}
 	}
 
@@ -195,11 +194,11 @@ public class GamePlayer extends GameCharacter
 		}
 		if (notDropped)
 		{
-			return "The item " + item + " could not be found in inventory and was not dropped.";
+			return "\n" + item + " could not be found in inventory and was not dropped.";
 		}
 		else
 		{
-			return "The item " + item + " was removed from inventory.";
+			return "\n" + item + " was removed from inventory.";
 		}
 	}
 
@@ -230,13 +229,27 @@ public class GamePlayer extends GameCharacter
 		if (notUsed)
 		{
 			//System.out.println("Game Item " + item + " was NOT used. Remaining health points is " + this.healthPoints);
-			return "Game Item " + item + " was NOT used. The item cannot be armor or a weapon, must be an item to use.";
+			return "\n" + item + " was NOT used. The item cannot be armor or a weapon, must be an item to use.";
 		}
 		else
 		{
 			//System.out.println("Game Item " + item + " was NOT used. Remaining health points is " + this.healthPoints);
-			return "Game Item " + item + " was used. Remaining health points is " + this.healthPoints;
+			return "\n" + item + " was used. Remaining health points is " + this.healthPoints;
 		}
+	}
+	
+	/**Method: fightMonster
+	 * This method simulates the fight between the player and a monster.
+	 * @param monster The game monster
+	 * @return A display message showing the results of the battle. 
+	 */
+	public String fightMonster(GameMonster monster)
+	{
+		monster.setHealthPoints(monster.getHealthPoints() - this.strength);
+		this.setHealthPoints(this.healthPoints - monster.getStrength());
+		return "\n" + this.name + " attacked monster " + monster.getName() + ".\n "
+				+ "The monsters remaining health points is " + monster.getHealthPoints() + ".\n" + 
+		monster.getAttackDesciption() + ".\nThe player's remaining health points is " + this.healthPoints;
 	}
 
 	/**Method: toString
