@@ -245,7 +245,7 @@ public class MainMenu extends Application
 				"PASSWORD IS STILL WEAK",
 				"PASSWORD IS STRONG",
 				"PASSWORD IS VERY STRONG"};
-		return rateList[ratePassword(password)];
+		return rateList[ratePasswordByStrongness(password)];
 	}
 	
 	/**Method: createNewPlayer
