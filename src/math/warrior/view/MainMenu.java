@@ -171,20 +171,26 @@ public class MainMenu extends Application
 		stage.show();
 	}
 	
-	private String ratePassword(String password){
+	// return value 0..4. And 0 means the password is NOT ACCEPTABLE
+	// 0==false equivalently
+	private int  ratePassword(String password){
 		/* Password must be at least 6 characters.
 		 * Password is recommended to include: lower, upper, digits, special charaxters:
 		 * 
 		 */
 		if (password.length()<6)
-			return "This password is too short. You can't set this as your password.";
-		int Strongness=0,i; Character c;
+			return 0;
+		
+		// Do not accept password has rate =0.
+		
+		
+		int strongness=0,i; Character c;
 		
 		// if pass has lower case
 		for (i=0;i<password.length();i++){
 			c=password.charAt(i);
 			if (('a'<=c)&&(c<='z')) {
-				Strongness++;
+				strongness++;
 				break;
 			}
 		}
@@ -193,7 +199,7 @@ public class MainMenu extends Application
 		for (i=0;i<password.length();i++){
 			c=password.charAt(i);
 			if (('A'<=c)&&(c<='Z')) {
-				Strongness++;
+				strongness++;
 				break;
 			}
 		}
@@ -204,7 +210,7 @@ public class MainMenu extends Application
 			c=password.charAt(i);
 			if (('0'<=c)&&(c<='9')) 
 			{
-				Strongness++;
+				strongness++;
 				break;
 			}
 		}
@@ -216,16 +222,23 @@ public class MainMenu extends Application
 					&&((('a'<=c)&&(c<='z'))==false)
 					&&((('0'<=c)&&(c<='9'))==false)) 
 			{
-				Strongness++;
+				strongness++;
 				break;
 			}
 		}
-		String ratedMessage[]=
-			{"Very weak", "Weak", "Medium", "Strong" , "Very strong"};
 		
-		return ratedMessage[Strongness];
+		return strongness;
 	}
-
+	
+	private String ratePasswordByMessage(String password){
+		String rateList[]={"UNACCEPTABLE", 
+				"PASSWORD IS TOO WEAK", 
+				"PASSWORD IS STILL",
+				"PASSWORD IS STRONG",
+				"PASSWORD IS VERY STRONG"};
+		return rateList[ratePassword(password)];
+	}
+	
 	/**Method: createNewPlayer
 	 * This method will put the new player in the database by getting information from the view.
 	 * The user will then be returned back to the main menu screen to load their game.
