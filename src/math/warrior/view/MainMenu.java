@@ -171,9 +171,12 @@ public class MainMenu extends Application
 		stage.show();
 	}
 	
-	// return value 0..4. And 0 means the password is NOT ACCEPTABLE
-	// 0==false equivalently
-	private int  ratePassword(String password){
+	/**
+	 * method ratePasswordByStrongness
+	 * @param password
+	 * @return int in range 0..4
+	 */
+	private int  ratePasswordByStrongness(String password){
 		/* Password must be at least 6 characters.
 		 * Password is recommended to include: lower, upper, digits, special charaxters:
 		 * 
@@ -230,6 +233,12 @@ public class MainMenu extends Application
 		return strongness;
 	}
 	
+	/**
+	 * method ratePasswordByMessage
+	 * @param password
+	 * @return String
+	 * return a message corresponding to the strongness of the password.
+	 */
 	private String ratePasswordByMessage(String password){
 		String rateList[]={"UNACCEPTABLE", 
 				"PASSWORD IS TOO WEAK", 
