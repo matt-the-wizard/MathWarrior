@@ -242,7 +242,7 @@ public class MainMenu extends Application
 	private String ratePasswordByMessage(String password){
 		String rateList[]={"UNACCEPTABLE", 
 				"PASSWORD IS TOO WEAK", 
-				"PASSWORD IS STILL",
+				"PASSWORD IS STILL WEAK",
 				"PASSWORD IS STRONG",
 				"PASSWORD IS VERY STRONG"};
 		return rateList[ratePassword(password)];
