@@ -240,7 +240,7 @@ public class MainMenu extends Application
 	 * return a message corresponding to the strongness of the password.
 	 */
 	private String ratePasswordByMessage(String password){
-		String rateList[]={"UNACCEPTABLE", 
+		String rateList[]={"UNACCEPTABLE! THE PASSWORD IS TOO SHORT", 
 				"PASSWORD IS TOO WEAK", 
 				"PASSWORD IS STILL WEAK",
 				"PASSWORD IS STRONG",
