@@ -14,7 +14,7 @@ INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength]
 
 -- Table: Rooms
 CREATE TABLE Rooms (
-ID INTEGER PRIMARY KEY AUTOINCREMENT,
+RID INTEGER PRIMARY KEY AUTOINCREMENT,
     RoomID          INTEGER,
     RoomName        CHAR,
     RoomDescription CHAR,
@@ -149,6 +149,7 @@ CREATE TABLE Items (
 CREATE TABLE Inventory
 (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    InventoryID Integer, 
     ItemName        CHAR,
     Type        CHAR,
     ItemDescription CHAR,

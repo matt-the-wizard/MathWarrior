@@ -6,7 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+
+import math.warrior.controller.GameItem;
+import math.warrior.controller.GameMap;
+import math.warrior.controller.GameMonster;
+import math.warrior.controller.GamePlayer;
+import math.warrior.controller.GamePuzzle;
+import math.warrior.controller.GameRoom;
 
 /**Class: Database.java
  * @author: Matthew Berger
@@ -65,7 +73,7 @@ public class Database
 		this.roomsAL = new ArrayList<GameRoom>();
 		this.roomContentAL = new ArrayList<Integer>();
 	}
-	
+
 	/**Method: commitConnection
 	 * This method commits the connection, making sure any pending queries are sent
 	 * to the database. Should be called after every execute or update query.
@@ -99,7 +107,7 @@ public class Database
 		} 
 		catch (SQLException sqle)
 		{
-			System.out.println("Could not execute query to DBMS.");
+			//System.out.println("Could not execute query to DBMS.");
 			return result;
 		}
 	}
@@ -114,11 +122,13 @@ public class Database
 		boolean success = true;
 		try
 		{
+			//System.out.println("In update \n" + sql);
 			this.statement.executeUpdate(sql);
+			//System.out.println("In update \n" + sql);
 		} 
 		catch (SQLException e)
 		{
-			System.out.println("Could not update the database with new information.");
+			//System.out.println("Could not update the database with new information.");
 			success = false;
 		}
 		return success;
@@ -148,10 +158,9 @@ public class Database
 				String monsterStrength = set.getString("MonsterStrength");
 				String monsterHealth = set.getString("MonsterHealth");
 				String attackDescription = set.getString("MonsterAttackDescription");
-				//String password = set.getString("Password");
-				//String playerName = set.getString("PlayerName");
+				String roomID = set.getString("RID");
 				GameMonster monster = new GameMonster(monsterName, monsterDescription, monsterHealth, monsterStrength, attackDescription);
-				GameRoom room = new GameRoom(roomName, roomDescription, solved, monster, null, null);
+				GameRoom room = new GameRoom(roomName, roomDescription, solved, monster, null, null, roomID);
 				//System.out.println(room + "\n");
 				this.roomsAL.add(room);
 				this.roomContentAL.add(roomContent);
@@ -188,10 +197,10 @@ public class Database
 				String type = set.getString("Type");
 				String description = set.getString("ItemDescription");
 				String value = set.getString("Value");
-				//String password = set.getString("Password");
-				//String playerName = set.getString("PlayerName");
-				GameItem item = new GameItem(itemName, value, description, type);
-				GameRoom room = new GameRoom(roomName, roomDescription, solved, null, null, item);
+				String roomID = set.getString("RID");
+				String itemID = set.getString("ItemID");
+				GameItem item = new GameItem(itemName, value, description, type, itemID);
+				GameRoom room = new GameRoom(roomName, roomDescription, solved, null, null, item, roomID);
 				//System.out.println(room + "\n");
 				this.roomsAL.add(room);
 				this.roomContentAL.add(roomContent);
@@ -228,10 +237,9 @@ public class Database
 				String hint = set.getString("PuzzleHint");
 				String terminator = set.getString("PuzzleTerminator");
 				String solvedMessage = set.getString("PuzzleSolvedMessage");
-				String password = set.getString("Password");
-				String playerName = set.getString("PlayerName");
+				String roomID = set.getString("RID");
 				GamePuzzle puzzle = new GamePuzzle(puzzleDescription, terminator, hint, solvedMessage);
-				GameRoom room = new GameRoom(roomName, roomDescription, solved, null, puzzle, null);
+				GameRoom room = new GameRoom(roomName, roomDescription, solved, null, puzzle, null, roomID);
 				//System.out.println(room + "\n");
 				this.roomsAL.add(room);
 				this.roomContentAL.add(roomContent);
@@ -243,7 +251,7 @@ public class Database
 		{
 			System.out.println("Could not create rooms with PUZZLES correctly.");
 		}
-		
+
 	}
 
 	/**Method: loadExtraRooms
@@ -272,7 +280,8 @@ public class Database
 					String roomName = roomSet.getString("RoomName");
 					String roomDescription = roomSet.getString("RoomDescription");
 					String solved = roomSet.getString("Solved");
-					GameRoom room = new GameRoom(roomName, roomDescription, solved, null, null, null);
+					String ID = roomSet.getString("RID");
+					GameRoom room = new GameRoom(roomName, roomDescription, solved, null, null, null, ID);
 					//System.out.println(room + "\n");
 					this.roomsAL.add(room);
 				}
@@ -311,8 +320,8 @@ public class Database
 	public GameItem[] loadInventory(int playerID)
 	{
 		GameItem[] inventory = new GameItem[GamePlayer.MAX_INVENTORY_SPACE];
-		ResultSet set = this.executeQuery("select * from Inventory" + " join Players on Inventory.PlayerID = Players.PlayerID  "
-				+ "where Players.PlayerID = " + playerID);
+		ResultSet set = this.executeQuery("select * from Inventory " + 
+				"where Inventory.PlayerID = " + playerID);
 		try
 		{
 			int count = 0;
@@ -322,7 +331,8 @@ public class Database
 				String type = set.getString("Type");
 				String description = set.getString("ItemDescription");
 				String value = set.getString("Value");
-				inventory[count] = new GameItem(itemName, value, description, type);
+				String itemID = set.getString("InventoryID");
+				inventory[count] = new GameItem(itemName, value, description, type, itemID);
 				count++;
 			}
 			set.close();
@@ -334,6 +344,100 @@ public class Database
 			System.out.println("Item inventory could not be loaded correctly.");
 		}
 		return inventory;
+	}
+
+	/**Method: loadPlayerId
+	 * This obtains the players id based on their password. 
+	 * @param password The password belonging to the player.
+	 * @return The player id.
+	 */
+	public int loadPlayerId(String password)
+	{
+		int id = 0;
+		ResultSet set = this.executeQuery("select * from Players where Players.Password like '" + password + "'");
+		try
+		{
+			if (set.next())
+			{
+				id = Integer.parseInt(set.getString("PlayerID"));
+				return id;
+			}
+			set.close();
+		} 
+		catch (SQLException e)
+		{
+			System.out.println("Player could not be found.");
+		}
+		return id;
+	}
+
+	/**Method: loadGamePlayer
+	 * This loads the player from the database based on the player id.
+	 * Then uses the data read in to create a GamePlayer object. 
+	 * @param playerID The id associated to the player.
+	 * @return the player as a GamePlayer object
+	 */
+	public GamePlayer loadGamePlayer(int playerID)
+	{
+		GameItem[] inventory = this.loadInventory(playerID);
+		GamePlayer player = null;
+		ResultSet set = this.executeQuery("select * from Players where PlayerID = " + playerID);
+		this.commitConnection();
+		try
+		{
+			if (set.next())
+			{
+				String name = set.getString("PlayerName");
+				String maxHealth = set.getString("MaximumHealth");
+				String healthPoints = set.getString("HealthPoints");
+				String strength = set.getString("Strength");
+				String score = set.getString("Score");
+				String id = set.getString("PlayerID");
+				player = new GamePlayer(name, healthPoints, maxHealth, strength, inventory, score, id);
+				//System.out.println("returning player");
+				set.close();
+				return player;
+			}
+		} 
+		catch (SQLException e)
+		{
+			System.out.println("Player could not be created from the database.");
+		}
+		return player;
+	}
+
+	/**Method: loadGameMap
+	 * This loads the rooms from the database as well as the location of the player.
+	 * The data read is used to make a GameMap object.
+	 * @param playerID The id associated to the player.
+	 * @return The game map.
+	 */
+	public GameMap loadGameMap(int playerID)
+	{
+		GameMap map = null;
+		ResultSet set = this.executeQuery("select * from Location" + " join Players on Location.LocationID = Players.PlayerID  "
+				+ "where Players.PlayerID = " + playerID);	
+		String xPos = "";
+		String yPos = "";
+		try
+		{
+			if (set.next())
+			{
+				xPos = set.getString("XPos");
+				yPos = set.getString("YPos");
+			}
+
+			//System.out.println("XPos = " + xPos + " YPos = " + yPos);
+			set.close();
+		} 
+		catch (SQLException e)
+		{
+			System.out.println("Game Map could not be created from the database.");
+		}
+		ArrayList<GameRoom> rooms = this.loadRooms(playerID);
+		map = new GameMap(rooms, xPos, yPos);
+		//System.out.println("Map location in gameMapLoad "+ map);
+		return map;
 	}
 
 	/**Method: genRoomRecordsForNewPlayer
@@ -542,94 +646,26 @@ public class Database
 		this.commitConnection();
 	}
 
-	/**Method: loadPlayerId
-	 * This obtains the players id based on their password. 
-	 * @param password The password belonging to the player.
-	 * @return The player id.
+	/**Method:genNewPlayer
+	 * This puts the data for the new player in the database.
+	 * @param userName The players name
+	 * @param password The players password
 	 */
-	public int loadPlayerId(String password)
+	public void genNewPlayer(String userName, String password)
 	{
-		int id = 0;
-		ResultSet set = this.executeQuery("select * from Players where Players.Password like '" + password + "'");
-		try
-		{
-			if (set.next())
-			{
-				id = Integer.parseInt(set.getString("PlayerID"));
-				return id;
-			}
-			set.close();
-		} 
-		catch (SQLException e)
-		{
-			System.out.println("Player could not be found.");
-		}
-		return id;
-	}
-
-	/**Method: loadGamePlayer
-	 * This loads the player from the database based on the player id.
-	 * Then uses the data read in to create a GamePlayer object. 
-	 * @param playerID The id associated to the player.
-	 * @return the player as a GamePlayer object
-	 */
-	public GamePlayer loadGamePlayer(int playerID)
-	{
-		GameItem[] inventory = this.loadInventory(playerID);
-		GamePlayer player = null;
-		ResultSet set = this.executeQuery("select * from Players where PlayerID = " + playerID);
+		this.executeQuery("INSERT INTO [Players] ([PlayerName], [MaximumHealth], [HealthPoints], [Strength], "
+				+ "[Score], [Password]) VALUES ('" + userName + "', 100, 100, 5, 0, '"+ password + "');");
 		this.commitConnection();
-		try
-		{
-			if (set.next())
-			{
-				String name = set.getString("PlayerName");
-				String maxHealth = set.getString("MaximumHealth");
-				String healthPoints = set.getString("HealthPoints");
-				String strength = set.getString("Strength");
-				String score = set.getString("Score");
-				player = new GamePlayer(name, healthPoints, maxHealth, strength, inventory, score);
-				//System.out.println("returning player");
-				set.close();
-				return player;
-			}
-		} 
-		catch (SQLException e)
-		{
-			System.out.println("Player could not be created from the database.");
-		}
-		return player;
 	}
 
-	/**Method: loadGameMap
-	 * This loads the rooms from the database as well as the location of the player.
-	 * The data read is used to make a GameMap object.
-	 * @param playerID The id associated to the player.
-	 * @return The game map.
+	/**Method: genNewInventory
+	 * This generates the inventory data for a new player corresponding to the players id.
+	 * @param playerID The id belonging to the player.
 	 */
-	public GameMap loadGameMap(int playerID)
+	public void genNewInventory(int playerID)
 	{
-		GameMap map = null;
-		ResultSet set = this.executeQuery("select * from Location" + " join Players on Location.LocationID = Players.PlayerID  "
-				+ "where Players.PlayerID = " + playerID);	
-		String xPos = "";
-		String yPos = "";
-		try
-		{
-			if (set.next())
-			{
-				xPos = set.getString("XPos");
-				yPos = set.getString("YPos");
-			}
-			set.close();
-		} 
-		catch (SQLException e)
-		{
-			System.out.println("Game Map could not be created from the database.");
-		}
-		ArrayList<GameRoom> rooms = this.loadRooms(playerID);
-		map = new GameMap(rooms, xPos, yPos);
-		return map;
+		this.executeQuery("INSERT INTO [Inventory] ([InventoryID], [ItemName], [Type], [ItemDescription], [Value], [PlayerID]) VALUES (1, 'Heavy Textbook', 'WEAPON', 'Equip this item to increase your strenth in battle.', 2, " + playerID + ");");
+		this.commitConnection();
 	}
 
 	/**Method: saveLocation
@@ -643,41 +679,62 @@ public class Database
 	{
 		this.updateDatabase("update Location "
 				+ "set XPos = " + xPos + ", YPos = " + yPos + " "
-				+ "where Location.LocationID = " + playerID + ";");
+				+ "where Location.LocationID = " +  playerID + ";");
+		this.commitConnection();
 	}
 
-	public void saveGamePlayer()
+	/**Method: saveRooms
+	 * This method saves the rooms belonging to the player.
+	 * @param rooms The list of game rooms
+	 * @param playerID The id belonging to the player.
+	 */
+	public void saveRooms(ArrayList<GameRoom> rooms, int playerID)
 	{
-
+		for (GameRoom element: rooms)
+		{
+			this.updateDatabase("update Rooms set Solved = " + element.isSolved() +
+					"where Rooms.PlayerID = " +  playerID + " and Rooms.ID = " + element.getID() + ";");
+			this.commitConnection();
+		}
 	}
 
-	public void saveRooms()
+	/**Method: savePlayer
+	 * This saves the players data back into the database.
+	 * @param player The game player.
+	 */
+	public void savePlayer(GamePlayer player)
 	{
-
+		this.updateDatabase("update Players set MaximumHealth = " + player.getMaxHealth() +
+				" , HealthPoints = " + player.getHealthPoints() +
+				" , Strength = " + player.getStrength() +
+				" , Score = " + player.getScore() +
+				" where PlayerID = " +  player.getId() + ";");
+		this.commitConnection();
 	}
 
-	public void saveInventory()
+	/**Method: saveInventory
+	 * This saves the players inventory to the database.
+	 * @param inventory The players inventory of items.
+	 * @param playerID The id associated to this players inventory.
+	 */
+	public void saveInventory(GameItem[] inventory, int playerID)
 	{
-
+		this.updateDatabase("delete from Inventory where Inventory.PlayerID = " + playerID +";");
+		this.commitConnection();
+		for (GameItem element: inventory)
+		{
+			try
+			{
+				this.executeQuery("INSERT INTO [Inventory] ([InventoryID], [ItemName], [Type], [ItemDescription], [Value], [PlayerID]) "
+						+ "VALUES (" + element.getId() + ", '" + element.getName() + "', '" + element.getType() + "', '" + element.getDescription() + "', '" + element.getValue() + "', " + playerID + ");");
+				this.commitConnection();
+			}
+			catch(NullPointerException npe)
+			{
+				//no item in inventory, so do nothing.
+			}
+		}
 	}
-
-
-	/*public static void main(String[] args)
-	{
-		Database database = new Database();
-		database.saveLocation(1, 4, 7);
-		GameMap map = database.loadGameMap(1);
-		System.out.println(map);
-		//database.genLocationForNewPlayer(60);
-		//System.out.println(database.loadGamePlayer(3));
-		/**database.genRoomRecordsForNewPlayer(2);
-		database.genMonsterRecordsForNewPlayer(2);
-		database.genPuzzleRecordsForNewPlayer(2);
-		database.genItemRecordsForNewPlayer(2);
-		//database.load
-		//ArrayList<GameRoom> rooms = database.loadRooms(3);
-		//System.out.println(rooms);
-	}*/
 
 }
 

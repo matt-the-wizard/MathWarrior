@@ -4,7 +4,8 @@
 package math.warrior.view.Swing;
 
 import math.warrior.model.*;
-import math.warrior.view.*;
+import math.warrior.view.fx.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
